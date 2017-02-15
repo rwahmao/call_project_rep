@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Mrs Reminder{% endblock %}
+    {
+
+{% block page_content %}
+
+
+
+    <div class="row">
+        {% block left_nav %}
+           {{ super() }}
+        {% endblock %}
+
+
+                        <div class="col-md-9">
+                            <div class="page-header">
+                                <h1>
+                                    My Calls List<small>&nbsp;&nbsp;&nbsp;&nbsp;show my scheduled calls here</small>
+                                </h1>
+                            </div>
+                            <p>
+                                <a href="{{ url_for('controller.create') }}" >
+                                <button type="button" class="btn btn-default btn-block">
+                                    Add a Call
+                                </button>
+                                </a>
+                            </p>
+                            <div>{% for message in get_flashed_messages() %}
+                                <div class="alert alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+
+                                        </th>
+                                        <th>
+                                            Reminder Name
+                                        </th>
+                                        <th>
+                                            Call Time
+                                        </th>
+                                        <th>
+                                           Call Number
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%  for i in calllist %}
+                                    <tr class="active">
+                                        <td>
+                                            {{ i.id }}
+                                        </td>
+                                        <td>
+                                            {{ i.call_name}}
+                                        </td>
+                                        <td>
+                                            {{ i.call_time }}
+                                        </td>
+                                        <td>
+                                            {{ i.number_called }}
+                                        </td>
+                                        <td>{% if i.call_status == 0 %}
+                                                     Suspended
+                                                        {% else %}
+                                                     Actived
+                                            {% endif %}
+
+
+                                        </td>
+                                        <td>
+                                                                                        <div class="btn-group">
+
+                                                <button class="btn btn-default">
+                                                   {% if i.call_status == 0 %}
+                                                    <a href="{{ url_for('controller.activateCall',call_id=i.id) }}">Activate</a>
+                                                        {% else %}
+                                                     <a href="{{ url_for('controller.suspendCall',call_id=i.id) }}">Suspend</a>
+                                                    {% endif %}
+                                                </button>
+                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+
+                                                        {% if i.call_status == 0 %}
+                                                     <a href="{{ url_for('controller.activateCall',call_id=i.id) }}">Activate</a>
+                                                        {% else %}
+                                                     <a href="{{ url_for('controller.suspendCall',call_id=i.id) }}">Suspend</a>
+                                                    {% endif %}
+
+
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ url_for('controller.editCall',call_id=i.id) }}">Edit</a>
+                                                    </li>
+                                                    <li class="divider">
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ url_for('controller.deleteCall',call_id=i.id) }}">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+
+
+                        </div>
+    </div>
+
+
+
+
+
+    {% endblock page_content %}
+
+

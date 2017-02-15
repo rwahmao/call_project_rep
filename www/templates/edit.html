@@ -23,10 +23,10 @@
             <div class="page-header">
                 <h1>
                     {% if current_user.is_authenticated %}
-                        Hello,{{ current_user.username }}
+                        Edit
                     {% else %}Dashboard
 
-                    {% endif %}!
+                    {% endif %}
                 </h1>
             </div>
             <div>{% for message in get_flashed_messages() %}
@@ -37,17 +37,17 @@
                 {% endfor %}
             </div>
 
-            <form action="" method="post" class="form" role="form">
-                {{ form.hidden_tag() }}
+            <form method="post" class="form" role="form">
+                    {{ form.hidden_tag() }}
                 <div class="form-group  required">
                     <label class="control-label" for="name">Caller Name:</label>
-                    <input class="form-control" id="name" name="name" required type="text" value="a">
+                    <input type='text' required class="form-control" id="name" name="name" value="{{ my.call_name }}" />
                 </div>
 
                 <div class="form-group ">
                     <label class="control-label">Call Time:</label>
                     <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' required id="time" name="time" class="form-control" value="2017-04-10 6:10" />
+                        <input type='text' id="time" name="time" class="form-control" value="{{ my.call_time }}" />
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -55,11 +55,12 @@
                 </div>
 
                 <div class="form-group  required"><label class="control-label" for="number">Call Phone Numbers:</label>
-                    <input class="form-control" id="number" name="number" required type="text" value="+19095590969">
+                    <input type='text' required class="form-control" id="number" name="number" value="{{ my.number_called }}" />
                 </div>
 
-                <input class="btn btn-default" id="submit" name="submit" type="submit" value="Submit">
+                <input class="btn btn-default" id="submit" name="submit" type="submit" value="Update">
             </form>
+
         </div>
 
 
@@ -75,5 +76,6 @@
             $(function () {
                 $('#datetimepicker1').datetimepicker();
             });
+            document.getElementById('name').focus();
         </script>
-{%- endblock scripts %}
+{%- endblock scripts %}f

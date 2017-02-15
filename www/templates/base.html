@@ -34,7 +34,29 @@
 {% block content %}
 <div class="container">
 
-    {% block page_content %}{% endblock %}
+    {% block page_content %}
+        {% block left_nav %}
+        <div class="col-md-3">
+            <div class="page-header">
+                <ul class="nav nav-list">
+                    <li >
+                        Dashboard
+                    </li>
+                    <li >
+                        <a href="#">My Phone Number</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('controller.listCall') }}" class="active">My Wakeup Call</a>
+                    </li>
+                    <li>
+                        <a href="#">My Credits</a>
+                    </li>
+                </ul>
+            </div>
+		</div>
+        {% endblock %}
+
+    {% endblock %}
 
 </div>
 

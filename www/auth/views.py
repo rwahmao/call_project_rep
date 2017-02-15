@@ -20,7 +20,7 @@ def login():
             #flash(__dict__(user.email.count))
             #flash(print(user.is_active))
             flash('Hi.Thank you for join the community.Before use our service,you have to verify your phone number first,try to click here to start.')
-            return redirect(request.args.get('next') or url_for('controller.create'))
+            return redirect(request.args.get('next') or url_for('controller.listCall'))
         flash('Error.Invalid username or password.')
     return render_template('/login.html', form=form)
 

@@ -13,6 +13,8 @@ class User(UserMixin,db.Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
 
+    appointments = db.relationship('Appointment', backref='user', lazy='dynamic')
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')

@@ -1,7 +1,7 @@
 # _*_ coding: utf-8 _*_
 from . import controller
 from flask_wtf import FlaskForm
-from flask import render_template,session,redirect,url_for,flash
+from flask import render_template,session,redirect,url_for,flash,request
 from wtforms import StringField, SubmitField,DateTimeField
 from wtforms.validators import required
 
@@ -20,10 +20,18 @@ from flask_sqlalchemy import SQLAlchemy
 class CreateForm(FlaskForm):
     name = StringField('Call Name:',validators=[required()])
 
-    time = DateTimeField('Call Time:',format='%Y-%m-%d %H:%M')
+    time = DateTimeField('Call Time:',format='%Y-%m-%d %H:%M',validators=[required()])
     #time = StringField('Call Time:', validators=[required()])
     number = StringField('Call Phone Number:', validators=[required()])
     submit = SubmitField('Submit')
+
+class UpdateForm(FlaskForm):
+    name = StringField('Call Name:',validators=[required()])
+
+    time = DateTimeField('Call Time:',format='%Y-%m-%d %H:%M')
+    #time = StringField('Call Time:', validators=[required()])
+    number = StringField('Call Phone Number:', validators=[required()])
+    submit = SubmitField('Update')
 
 @controller.route('/create',methods=['GET','POST'])
 @login_required
@@ -36,7 +44,8 @@ def create():
         #appointment.call_name = form.name.data
         #appointment.number_called = form.number.data
         #appointment.call_time = "1990-02-02 12:25"
-        appointment = Appointment(form.name.data,form.time.data,form.number.data)
+        uid = current_user.get_id()
+        appointment = Appointment(form.name.data,form.time.data,form.number.data, uid)
         db.session.add(appointment)
         db.session.commit()
         return redirect(url_for('controller.listCall'))
@@ -106,22 +115,27 @@ def activateCall(call_id):
 def editCall(call_id):
 
     name = None
-    form = CreateForm()
-
-    if form.validate_on_submit():
+    form = UpdateForm()
+    #flash(form.errors)
+    #print(form.name.data)
+    #print('abcd')
+    #print(form.time.data)
+    #print(form.number.data)
+    #注意这个因为默认取不到js控制的时间input框的值（不点一下time值永远是none，通不过validator，所以取消的安全措施）
+    if request.method == "POST":
         flash('Success. Your had updated your reminder call settings.')
         #appointment.call_name = form.name.data
         #appointment.number_called = form.number.data
         #appointment.call_time = "1990-02-02 12:25"
-        print(call_id)
+        #print(call_id)
         appointment = Appointment.query.filter_by(id = call_id).first()
         appointment.call_name = form.name.data
-        appointment.call_time = form.time.data
+        if form.time.data != None:
+            appointment.call_time = form.time.data
         appointment.number_called = form.number.data
         db.session.commit()
         return redirect(url_for('controller.listCall'))
-
-
+    form = UpdateForm()
     my = Appointment.query.filter_by(id=call_id).first()
     return render_template('edit.html', form=form, name=name,my=my)
 
